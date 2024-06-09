@@ -1,7 +1,7 @@
 <?php 
 function checkRule($grid, $row, $col, $num)
 {
-    //row+
+    //row
     for ($i = 0; $i < 9; $i++) {
         if ($grid[$row][$i] == $num) {
             return false;
@@ -38,15 +38,14 @@ function getNewGrid($grid) {
     }
 }
 
-// Function to solve the Sudoku puzzle using backtracking
 function sudoku(&$grid, $row, $col)
 {
     if ($row == 9)
-        return true; // Entire grid filled successfully
+        return true; 
     if ($col == 9)
-        return sudoku($grid, $row + 1, 0); // Move to the next row
+        return sudoku($grid, $row + 1, 0);
     if ($grid[$row][$col] != 0)
-        return sudoku($grid, $row, $col + 1); // Move to the next column
+        return sudoku($grid, $row, $col + 1); 
 
     for ($i = 1; $i <= 9; $i++) {
         if (checkRule($grid, $row, $col, $i)) {
@@ -83,7 +82,7 @@ if ($solvedSudoku !== false) {
         echo "\n";
     }
 } else {
-    echo "Sudoku is invalid";
+    echo "Sudooku is invalid";
 }
 
 ?>
