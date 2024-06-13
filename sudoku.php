@@ -1,37 +1,58 @@
-<?php 
+<?php
+function checkForExistDataRule($grid, $row, $col, $num)
+{
+    $count = 0;
+    for ($i = 0; $i < 9; $i++) {
+        if (($grid[$row][$i] == $num)) {
+            $count = $count +1;
+        }
+    }
+    for ($j = 0; $j < 9; $j++) {
+        if ($grid[$j][$col] == $num) {
+            $count++;
+        }
+    }
+    if ($count > 2){
+        return 0;
+    }else{
+        return 1;
+    }
+}
 function checkRule($grid, $row, $col, $num)
 {
     //row
     for ($i = 0; $i < 9; $i++) {
-        if ($grid[$row][$i] == $num) {
+        if (($grid[$row][$i] == $num)) {
             return false;
         }
     }
-    
     //col
     for ($j = 0; $j < 9; $j++) {
         if ($grid[$j][$col] == $num) {
             return false;
         }
     }
-    
+
     //3rd rulw
     $ruleRow = $row - $row % 3;
-    $rukeCol = $col - $col % 3;
-    
+    $ruleCol = $col - $col % 3;
+
     for ($i = 0; $i < 3; $i++) {
         for ($j = 0; $j < 3; $j++) {
-            if ($grid[$i + $ruleRow][$j + $rukeCol] == $num) {
+            if ($grid[$i + $ruleRow][$j + $ruleCol] == $num) {
                 return false;
             }
         }
     }
-    
+
     return true;
 }
 
-function getNewGrid($grid) {
-    if (sudoku($grid, 0, 0)) {
+function getNewGrid($grid)
+{
+    // if (sudoku($grid, 8, 5)) {
+        if (sudoku($grid, 0, 0)) {
+
         return $grid;
     } else {
         return false;
@@ -41,23 +62,31 @@ function getNewGrid($grid) {
 function sudoku(&$grid, $row, $col)
 {
     if ($row == 9)
-        return true; 
+        return true;
     if ($col == 9)
         return sudoku($grid, $row + 1, 0);
-    if ($grid[$row][$col] != 0)
-        return sudoku($grid, $row, $col + 1); 
+    if ($grid[$row][$col] != 0) {
+        if(
+            checkForExistDataRule($grid, $row, $col, $grid[$row][$col]) !== 0){
+            return sudoku($grid, $row, $col + 1);
+        }
+        else{
+            return false;
+        }
+    }
 
     for ($i = 1; $i <= 9; $i++) {
         if (checkRule($grid, $row, $col, $i)) {
+            // echo $row, $col, $grid[$row][$col] , $i;exit;
             $grid[$row][$col] = $i;
             if (sudoku($grid, $row, $col + 1)) {
                 return true;
             }
         }
-        $grid[$row][$col] = 0; 
+        $grid[$row][$col] = 0;
     }
 
-    return false; 
+    return false;
 }
 
 $sudokuMatrix = [
@@ -82,7 +111,6 @@ if ($solvedSudoku !== false) {
         echo "\n";
     }
 } else {
-    echo "Sudooku is invalid";
+    echo "Sudooku is invalid" . "\n";
 }
 
-?>
